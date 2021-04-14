@@ -207,8 +207,11 @@ namespace ZooAPI.Connections
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT z.ID, z.Ort, z.Name, t.ID, t.Name, t.Tierart, n.ID, n.Name, m.ID, m.Nachname, m.Vorname, g.ID, g.Gehegeart, ga.ID, ga.Name " +
-                    "FROM mitarbeiter m, tier t, zoo z, gast ga, gehege g, nahrung n WHERE z.ID = n.ZooID AND z.ID = m.ZooID AND z.ID = g.ZooID AND z.ID = ga.ZooID AND z.ID = t.ZooID", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT z.ID, z.Ort, z.Name, t.Name as TierName, t.Tierart, m.Nachname, g.Gehegeart " +
+                    "FROM mitarbeiter m, tier t, zoo z, gehege g WHERE z.ID = m.ZooID AND z.ID = g.ZooID AND z.ID = t.ZooID AND t.ID = g.TierID AND t.ID = m.TierID", conn);
+
+                // MySqlCommand cmd = new MySqlCommand("SELECT z.ID, z.Ort, z.Name, t.ID, t.Name, t.Tierart, n.ID, n.Name, m.ID, m.Nachname, g.ID, g.Gehegeart, ga.ID, ga.Name " +
+                //    "FROM mitarbeiter m, tier t, zoo z, gast ga, gehege g, nahrung n WHERE z.ID = n.ZooID AND z.ID = m.ZooID AND z.ID = g.ZooID AND z.ID = ga.ZooID AND z.ID = t.ZooID", conn);
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -217,18 +220,17 @@ namespace ZooAPI.Connections
                         temp.ZooId = Convert.ToInt64(reader["ID"]);
                         temp.ZooOrt = Convert.ToString(reader["Ort"]);
                         temp.ZooName = Convert.ToString(reader["Name"]);
-                        temp.TierId = Convert.ToInt64(reader["ID"]);
-                        temp.TierName = Convert.ToString(reader["Name"]);
+                        // temp.TierId = Convert.ToInt64(reader["ID"]);
+                        temp.TierName = Convert.ToString(reader["TierName"]);
                         temp.Tierart = Convert.ToString(reader["Tierart"]);
-                        temp.NahrungId = Convert.ToInt64(reader["ID"]);
-                        temp.NahrungName = Convert.ToString(reader["Name"]);
-                        temp.MitarbeiterId = Convert.ToInt64(reader["ID"]);
+                        // temp.NahrungId = Convert.ToInt64(reader["ID"]);
+                        // temp.NahrungName = Convert.ToString(reader["Name"]);
+                        // temp.MitarbeiterId = Convert.ToInt64(reader["ID"]);
                         temp.MitarbeiterNachname = Convert.ToString(reader["Nachname"]);
-                        temp.MitarbeiterVorname = Convert.ToString(reader["Vorname"]);
-                        temp.GehegeId = Convert.ToInt64(reader["ID"]);
+                        // temp.GehegeId = Convert.ToInt64(reader["ID"]);
                         temp.Gehegeart = Convert.ToString(reader["Gehegeart"]);
-                        temp.GastId = Convert.ToInt64(reader["ID"]);
-                        temp.GastName = Convert.ToString(reader["Name"]);
+                        // temp.GastId = Convert.ToInt64(reader["ID"]);
+                        // temp.GastName = Convert.ToString(reader["Name"]);
                         list.Add(temp);
                     }
                 }
